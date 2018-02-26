@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <link rel="stylesheet" href="__PUBLIC__/Js/layui/css/layui.css">
+    <!-- mui -->
+    <link rel="stylesheet" href="__PUBLIC__/mobile/lib/mui/css/mui.css">
+    <link href="__PUBLIC__/mobile/lib/fa/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+<script src="__PUBLIC__/dist/js/artTemplate/template-web.js"></script>
+<script src="__PUBLIC__/Js/memont.js"></script>
+
+    <script src="__PUBLIC__/mobile/lib/wechat.js"></script>
+
+<script src="__PUBLIC__/Js/layui/layui.all.js"></script>
+<!-- mui -->
+<script src="__PUBLIC__/mobile/lib/mui/js/mui.min.js"></script>
+
+<!-- 文件上傳插件 -->
+<script src="__PUBLIC__/Js/jquery-fileupload/jquery.ui.widget.js"></script>
+<script src="__PUBLIC__/Js/jquery-fileupload/jquery.fileupload.js"></script>
+<!-- 模板嵌套 -->
+<script id="testTemplate" type="text/html">
+    {{each list}}
+        <span>{{$value.name}}</span>
+        <span>{{$value.age}}</span>
+        {{include 'scoreTemplate' $value}} <!--引入子模板-->
+    {{/each}}
+</script>
+
+<script id="scoreTemplate" type="text/html">
+    {{each scoreList}}
+        <span>{{$value.name}}</span>
+        <span>{{$value.score}}</span>
+    {{/each}}
+</script>
+<script>
+    template.defaults.imports.dateformatter = function (value, pattern) {
+        var v = value * 1000;
+        return moment(v).format(pattern);
+    };
+
+    // 提示
+    layer.msg('通用配件删除' + data.reseaon);
+    layer.confirm('确定要删除?', {
+        title:'删除此列',
+        content: '',
+        btn: ['确认', '取消']
+    }, function (index, layero) {
+        layer.msg('删除成功', { icon: 1 })
+    });
+
+// 渲染下拉框
+    myTools.renderLv();
+    myTools.renderFeeName();
+    myTools.renderTips(); // ajax渲染的提示
+
+// 请求验证
+if(data.info=="请求成功") {
+    layer.msg(data.info,{icon:1})
+}else {
+    layer.msg(data.info,{icon:2})
+}
+
+//0.1透明度的白色背景
+var index = layer.load(1, {
+  shade: [0.5,'#fff'],
+  time : 3000 // 弹出的时间，单位是毫秒
+});
+layer.close(index);
+var index = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+//loading层
+//
+//
+//
+//
+
+// 分页
+// 给一个盒子叫做 pageBox 一定要id
+function renderPage(len) {
+    layui.use('laypage', _ => {
+        let laypage = layui.laypage;
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'pageBox' //注意，这里的 test1 是 ID，不用加 # 号
+            , count: len //数据总数，从服务端得到
+            , groups: 5
+            , jump(obj, first) {
+                data.info.page = obj.curr;
+                if (!first) {
+                    myTools.sendLocalstorageRequest(data, data => {
+                        var data = data.data;
+                        // renderPage(data.total);
+                        $(".psa_info").html(template('tpl1', data));
+                    })
+                }
+            }
+        });
+    });
+}
+</script>
+</body>
+</html>
