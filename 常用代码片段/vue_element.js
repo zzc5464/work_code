@@ -2,7 +2,7 @@
 * @Author: Zzc
 * @Date:   2018-02-25 11:05:00
 * @Last Modified by:   Zzc
-* @Last Modified time: 2018-02-26 17:09:56
+* @Last Modified time: 2018-02-28 14:46:43
 */
 
 'use strict';
@@ -74,6 +74,18 @@ slot-scope="scope" 保存了当前列的所有对象
 /*
 deleteRow(index, rows) {
   rows.splice(index, 1);
+}
+
+minimunDetail(order_no) {
+    this.orderDetilAPI.info.order_no = order_no;
+    this.orderDetilShow = true;
+    myTools.sendAxios(this.orderDetilAPI, data => {
+        let info = data.data;
+        if (info.info == "请求成功") {
+            // 审核状态
+            this.orderDetail = info.data;
+        }
+    })
 }
 
  */
